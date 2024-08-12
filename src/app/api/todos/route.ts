@@ -49,7 +49,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const todo = await prisma.todo.deleteMany({ where: { complete: true } });
+    await prisma.todo.deleteMany({ where: { complete: true } });
 
     return NextResponse.json("Deleted succesfully");
   } catch (error) {
