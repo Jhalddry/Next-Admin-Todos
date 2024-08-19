@@ -1,6 +1,6 @@
 interface Props {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const WidgetItem = ({ title, children }: Props) => {
@@ -13,7 +13,6 @@ export const WidgetItem = ({ title, children }: Props) => {
           <div className="mt-2 flex flex-col justify-center gap-4">
             {children}
           </div>
-
 
         </div>
       </div>

@@ -20,6 +20,10 @@ npx prisma migrate dev
 npx prisma generate
 
 ```
+# Note: User by Default
+
+__user:__ test1@google.com
+__password:__ 123456
 
 # Prod
 
