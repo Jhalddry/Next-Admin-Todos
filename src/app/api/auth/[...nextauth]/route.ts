@@ -37,18 +37,15 @@ export const authOptions: NextAuthOptions = {
           placeholder: "******",
         },
       },
-      async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
+      async authorize(credentials) {
         const user = await signInEmailPassword(
           credentials!.email,
           credentials!.password
         );
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
+        if (!user) {
+          throw new Error("Invalid credentials");
         }
-
-        return null;
+        return user;
       },
     }),
   ],
@@ -58,10 +55,6 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      return true;
-    },
-
     async jwt({ token, user, account, profile }) {
       const dbUser = await prisma.user.findUnique({
         where: { email: token.email ?? "no-email" },
@@ -75,15 +68,6 @@ export const authOptions: NextAuthOptions = {
       token.id = dbUser?.id ?? "no-id";
 
       return token;
-    },
-
-    async session({ session, token, user }) {
-      if (session && session.user) {
-        session.user.roles = token.roles;
-        session.user.id = token.id;
-      }
-
-      return session;
     },
   },
 };
