@@ -10,7 +10,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { signInEmailPassword } from "@/auth/actions/auth-actions";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
 
   providers: [
@@ -38,9 +38,12 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
+        if (!credentials) {
+          throw new Error("Credentials are required");
+        }
         const user = await signInEmailPassword(
-          credentials!.email,
-          credentials!.password
+          credentials.email,
+          credentials.password
         );
         if (!user) {
           throw new Error("Invalid credentials");
